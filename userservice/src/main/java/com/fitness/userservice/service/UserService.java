@@ -55,4 +55,8 @@ public class UserService {
 
         return userResponse;
     }
+
+    public Boolean exitsByUserId(String userId) {
+        return userRepository.existsById(userId);
+    }
 }
