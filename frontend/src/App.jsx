@@ -9,7 +9,25 @@ import {
   Routes,
   useLocation,
 } from "react-router";
-import { setCredentials } from "./store/authSlice";
+import { logout, setCredentials } from "./store/authSlice";
+import ActivityForm from "./components/ActivityForm";
+import ActivityList from "./components/ActivityList";
+import ActivityDetail from "./components/ActivityDetail";
+
+const ActivityPage = () => {
+  return (
+    <>
+      <Box component="section" sx={{ p: 2, border: "1px dashed grey" }}>
+        <ActivityForm
+          onActivities={() => {
+            window.location.reload();
+          }}
+        />
+        <ActivityList />
+      </Box>
+    </>
+  );
+};
 
 function App() {
   const { token, tokenData, logIn, logOut, isAuthenticated } =
@@ -37,10 +55,26 @@ function App() {
           LOGIN
         </Button>
       ) : (
-        <div>
-          <pre>{JSON.stringify(tokenData, null, 2)}</pre>
-          <pre>{JSON.stringify(token, null, 2)}</pre>
-        </div>
+        <Box component="section" sx={{ p: 2, border: "1px dashed grey" }}>
+          <Button variant="contained" color="secondary" onClick={logout}>
+            Logout
+          </Button>
+          <Routes>
+            <Route path="/activities" element={<ActivityPage />} />
+            <Route path="/activities/:id" element={<ActivityDetail />} />
+
+            <Route
+              path="/"
+              element={
+                token ? (
+                  <Navigate to="/activities" replace />
+                ) : (
+                  <div>Please Log In</div>
+                )
+              }
+            />
+          </Routes>
+        </Box>
       )}
     </Router>
   );
